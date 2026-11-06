@@ -29,6 +29,11 @@ All commands below are for **PowerShell on Windows**, run from the project folde
 3. Create the teacher account: **Authentication → Users → Add user → Create new
    user**. Enter an email and password and tick **Auto Confirm User**.
    (There is no sign-up page in the app on purpose.)
+4. Turn off public sign-ups: **Authentication → Sign In / Providers** → switch
+   **OFF** "Allow new users to sign up", then save.
+   **Why:** without this, anyone with the publishable key (which is visible in
+   the browser) can create their own account and get a valid login token that
+   the backend would accept.
 
 ## 2. Fill in the secret settings
 
