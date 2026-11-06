@@ -1,14 +1,22 @@
 """In-memory stand-ins for Supabase, so tests run without the internet."""
 from types import SimpleNamespace
 
+from supabase_auth.errors import AuthApiError, AuthRetryableError
+
 GOOD_TOKEN = "good-token"
+SUPABASE_DOWN_TOKEN = "supabase-down"  # simulates no internet / Supabase unreachable
+BROKEN_CONFIG_TOKEN = "broken-config"  # simulates an unexpected error, e.g. bad .env
 
 
 class _FakeAuth:
     def get_user(self, token):
         if token == GOOD_TOKEN:
             return SimpleNamespace(user=SimpleNamespace(id="teacher-1", email="teacher@example.com"))
-        raise Exception("Invalid JWT")
+        if token == SUPABASE_DOWN_TOKEN:
+            raise AuthRetryableError("Connection refused", 0)
+        if token == BROKEN_CONFIG_TOKEN:
+            raise RuntimeError("something unexpected")
+        raise AuthApiError("invalid JWT", 403, "bad_jwt")
 
 
 class FakeClient:

@@ -18,21 +18,32 @@ export default function Attendance({ date, onDateChange, students, onSaved }) {
     getAttendance(date)
       .then((data) => {
         if (cancelled) return
-        setError('')
-        if (loadedDate.current !== date) setSavedMessage(false)
-        const fresh = initialStatuses(data)
-        // Same date reloaded (a student was added): keep the clicks already made.
-        setStatuses((prev) => {
-          if (loadedDate.current !== date) return fresh
-          const kept = Object.fromEntries(Object.entries(prev).filter(([id]) => id in fresh))
-          return { ...fresh, ...kept }
-        })
+        // Decide NOW whether this is the same date reloaded (a student was added).
+        // Don't read the ref inside the setStatuses updater: React may run that
+        // updater later, after the ref has already changed.
+        const sameDate = loadedDate.current === date
         loadedDate.current = date
+        const fresh = initialStatuses(data)
+        if (sameDate) {
+          // Keep the clicks already made for students who are still listed.
+          setStatuses((prev) => {
+            const kept = Object.fromEntries(Object.entries(prev).filter(([id]) => id in fresh))
+            return { ...fresh, ...kept }
+          })
+        } else {
+          setStatuses(fresh)
+          setSavedMessage(false)
+        }
+        setError('')
         setRows(data)
         setLoadedFor({ date, students })
       })
       .catch((err) => {
         if (cancelled) return
+        // Clear the old date's rows so they can't be saved under this date.
+        loadedDate.current = null
+        setRows([])
+        setStatuses({})
         setError(err.message)
         setLoadedFor({ date, students })
       })
