@@ -14,13 +14,15 @@
 
 \## Scope (keep it SIMPLE)
 
+\- Teacher login: Supabase Auth email + password, NO sign-up page (account created in the Supabase dashboard)
+
 \- Add and list students
 
-\- Mark present/absent for a date
+\- Mark present/absent for a date, with a "mark all present" button
 
-\- View attendance by date
+\- View attendance for past dates
 
-\- NO login, NO extra features unless I ask
+\- NO extra features unless I ask
 
 
 
