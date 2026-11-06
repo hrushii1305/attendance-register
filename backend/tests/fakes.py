@@ -23,6 +23,7 @@ class FakeStore:
 
     def __init__(self):
         self.students = []
+        self.records = {}  # (student_id, "YYYY-MM-DD") -> present
         self._next_id = 1
 
     def list_students(self):
@@ -33,3 +34,19 @@ class FakeStore:
         self._next_id += 1
         self.students.append(student)
         return student
+
+    def attendance_for(self, day):
+        return [
+            {"student_id": s["id"], "name": s["name"], "present": self.records.get((s["id"], day.isoformat()))}
+            for s in self.list_students()
+        ]
+
+    def save_attendance(self, day, records):
+        known = {s["id"] for s in self.students}
+        if any(r["student_id"] not in known for r in records):
+            raise ValueError("Unknown student")
+        for r in records:
+            self.records[(r["student_id"], day.isoformat())] = r["present"]
+
+    def saved_dates(self):
+        return sorted({d for (_, d) in self.records}, reverse=True)
