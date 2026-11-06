@@ -41,10 +41,133 @@ h1 {
   font-weight: 500;
 }
 
-/* Main screen header */
-.topbar {
+/* Main screen */
+.app {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.topbar,
+.who,
+.section-head,
+.actions,
+.add-student {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.topbar,
+.section-head {
+  justify-content: space-between;
+}
+
+h2 {
+  font-size: 1.1rem;
+  margin: 0 0 0.75rem;
+}
+
+.section-head h2 {
+  margin: 0;
+}
+
+.muted {
+  color: var(--muted);
+  margin: 0.5rem 0 0;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Students */
+.add-student input {
+  flex: 1;
+  min-width: 0;
+}
+
+.student-list {
+  margin-top: 0.75rem;
+  columns: 2 12rem;
+}
+
+.student-list li {
+  padding: 0.2rem 0;
+}
+
+.add-student + .error {
+  margin-top: 0.5rem;
+}
+
+/* Attendance */
+.attendance-list {
+  margin: 0.75rem 0;
+}
+
+.attendance-list li {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.student-name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.not-recorded {
+  font-size: 0.8rem;
+  color: var(--muted);
+  font-style: italic;
+}
+
+.toggle {
+  display: flex;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+
+.toggle button.present.selected {
+  background: var(--present);
+  border-color: var(--present);
+  color: #fff;
+}
+
+.toggle button.absent.selected {
+  background: var(--absent);
+  border-color: var(--absent);
+  color: #fff;
+}
+
+.actions {
+  margin-top: 0.75rem;
+}
+
+.saved {
+  color: var(--present);
+  font-weight: 600;
+}
+
+/* Past dates */
+.date-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.date-list button.selected {
+  border-color: var(--primary);
+  color: var(--primary);
+  font-weight: 600;
 }
