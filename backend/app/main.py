@@ -1,13 +1,33 @@
 import datetime
+import logging
 
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 from app.deps import get_store, require_user
 from app.store import Store
 
 app = FastAPI(title="Attendance Register API")
+logger = logging.getLogger("uvicorn.error")  # shows up in the backend window
+
+
+# Turn any unexpected crash into a JSON "server error" reply.
+# This is added BEFORE the CORS middleware, so it sits inside it and the reply
+# still gets CORS headers. Without that, the browser hides the reply and the
+# app wrongly says "Can't reach the server".
+@app.middleware("http")
+async def server_errors_as_json(request: Request, call_next):
+    try:
+        return await call_next(request)
+    except Exception:
+        logger.exception("Unexpected error on %s %s", request.method, request.url.path)
+        return JSONResponse(
+            status_code=500,
+            content={"detail": "Server error. Check the backend window for details."},
+        )
+
 
 # Only the React dev server may call this API from a browser.
 app.add_middleware(

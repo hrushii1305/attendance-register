@@ -4,6 +4,7 @@ from datetime import date
 from postgrest.exceptions import APIError
 
 PAGE_SIZE = 1000  # Supabase returns at most 1000 rows per request by default
+FOREIGN_KEY_VIOLATION = "23503"  # Postgres error code: the student id doesn't exist
 
 
 class Store:
@@ -43,7 +44,9 @@ class Store:
         try:
             self.client.table("attendance").upsert(rows, on_conflict="student_id,date").execute()
         except APIError as e:
-            raise ValueError("Unknown student") from e
+            if e.code == FOREIGN_KEY_VIOLATION:
+                raise ValueError("Unknown student") from e
+            raise  # any other database problem is a real server error
 
     def saved_dates(self) -> list[str]:
         """Dates that have any saved attendance, newest first."""
