@@ -1,0 +1,23 @@
+# ----- Secrets -----
+.env
+.env.*
+!.env.example
+
+# ----- Python (backend) -----
+__pycache__/
+*.pyc
+venv/
+.venv/
+
+# ----- Node / React / Vite (frontend) -----
+node_modules/
+dist/
+
+# ----- Logs -----
+*.log
+
+# ----- Editor & OS clutter -----
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
